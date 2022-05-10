@@ -37,7 +37,6 @@
   until: _download_binary is succeeded
   retries: 5
   delay: 2
-  delegate_to: localhost
   check_mode: false
 
 - name: Unpack process_exporter binary
@@ -45,7 +44,7 @@
     src: "/tmp/process-exporter-{{ process_exporter_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}.tar.gz"
     dest: "/tmp"
     creates: "/tmp/process-exporter-{{ process_exporter_version }}.linux-{{ go_arch_map[ansible_architecture] | default(ansible_architecture) }}/process-exporter"
-  delegate_to: localhost
+    remote_src: True
   check_mode: false
 
 - name: Propagate process-exporter binaries
@@ -56,6 +55,7 @@
     mode: 0755
     owner: root
     group: root
+    remote_src: True
   notify:
     - restart process exporter
 
